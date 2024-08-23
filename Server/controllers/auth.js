@@ -23,7 +23,7 @@ export const register = async (req, res) => {
           firstName,
           lastName,
           email,
-          passwordHash,
+          password: passwordHash,
           picturePath,
           friends,
           location,
@@ -31,7 +31,6 @@ export const register = async (req, res) => {
           viewedProfile: Math.floor(Math.random() * 1000),
           imporessions: Math.floor(Math.random() * 1000)
         });
-
         const savedUser = await newUser.save();
         res.status(201).json(savedUser);
     } catch (err) {
@@ -43,7 +42,8 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({ email: email})
+        const user = await User.findOne({ email: email});
+        console.log(user);
         if (!user) return res.status(400).json({ msg: "User Doesn't Exist"});
 
         const isMatch = await bcrypt.compare(password, user.password);
@@ -55,4 +55,4 @@ export const login = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-}
+};
